@@ -42,9 +42,9 @@ const moreApple = new Item({
 
 const defaultItems = [milk, orange, apple, moreApple];
 
-Item.deleteOne({_id:"5d6458fbb0ff7d817f678fd6"}, function(err){
-  console.log("item deleted")
-});
+// Item.deleteOne({_id:"5d6458fbb0ff7d817f678fd6"}, function(err){
+//   console.log("item deleted")
+// });
 
 // Item.insertMany(defaultItems, function(err) {
 //   if (err) {
@@ -67,7 +67,7 @@ app.get("/", function(req, res) {
 
   // const day = date.getDate();
 
-  Item.find(function(err , items){
+  Item.find({},function(err , items){
 
     if (err) {
       console.log(err);
@@ -103,7 +103,9 @@ app.post("/", function(req, res) {
     res.redirect("/work");
 
   } else {
+
     newItemFromInput.save();
+
     res.redirect("/");
 
     //replaced by the code above
@@ -127,6 +129,20 @@ app.post("/", function(req, res) {
     // })
 
   }
+});
+
+app.post("/delete", function(req, res){
+  const checkedItemId = req.body.checkbox;
+
+  Item.findByIdAndRemove(checkedItemId, function(err){
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("ticked item deleted");
+      res.redirect("/")
+    }
+
+  })
 });
 
 app.get("/work", function(req, res) {
